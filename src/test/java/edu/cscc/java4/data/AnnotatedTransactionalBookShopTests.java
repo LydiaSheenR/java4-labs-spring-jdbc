@@ -23,6 +23,16 @@ public class AnnotatedTransactionalBookShopTests {
   @Autowired
   BookShopRepository repository;
 
+  @Before
+  public void setupTests () {
+    repository.setAccountBalance(USER1, 25.00);
+    repository.setQuantityOnHand(ISBN,10);
+    repository.setBookPrice(ISBN, 7.00);
+    assertEquals(10, repository.getQuantityOnHand(ISBN));
+    assertEquals(25.00, repository.getAccountBalance(USER1), 0.00);
+    assertEquals(7, repository .getBookPrice(ISBN), 0.00);
+  }
+
   @Test
   public void findByValidIsbnWorks_Test () {
     Book book = repository.getBookByIsbn(ISBN);
@@ -53,20 +63,11 @@ public class AnnotatedTransactionalBookShopTests {
   }
 
   @Test
-  public void purchaseDecrementsQtyOnHandAndBalance_Test () {
-    assertEquals(10, repository.getQuantityOnHand(ISBN));
-    assertEquals(25.00, repository.getAccountBalance(USER1), 0.00);
-    repository.purchase(ISBN, 1, USER1);
-    assertEquals(9, repository.getQuantityOnHand(ISBN));
-    assertEquals(18.00, repository.getAccountBalance(USER1), 0.00);
-  }
-
-  @Test
   public void consistentStateMaintainedWhenBalanceExceeded_Test () {
-    assertEquals(10, repository.getQuantityOnHand(ISBN));
-    assertEquals(25.00, repository.getAccountBalance(USER1), 0.00);
+    repository.setBookPrice(ISBN, 100.00);
+    assertEquals(100.00, repository .getBookPrice(ISBN), 0.00);
     try {
-      repository.purchase(ISBN, 4, USER1);
+      repository.purchase(ISBN, 1, USER1);
       fail("Should have thrown DataIntegrityViolationException");
     }
     catch (DataIntegrityViolationException e) {
@@ -76,5 +77,30 @@ public class AnnotatedTransactionalBookShopTests {
       assertEquals(25.00, repository.getAccountBalance(USER1), 0.00);
     }
   }
+
+  @Test
+  public void consistentStateMaintainedWhenQtyExceeded_Test () {
+    repository.setQuantityOnHand(ISBN,1);
+    assertEquals(1, repository.getQuantityOnHand(ISBN));
+    try {
+      repository.purchase(ISBN, 2, USER1);
+      fail("Should have thrown DataIntegrityViolationException");
+    }
+    catch (DataIntegrityViolationException e) {
+    }
+    finally {
+      assertEquals(1, repository.getQuantityOnHand(ISBN));
+      assertEquals(25.00, repository.getAccountBalance(USER1), 0.00);
+    }
+  }
+
+
+  @Test
+  public void purchaseDecrementsQtyOnHandAndBalance_Test () {
+    repository.purchase(ISBN, 1, USER1);
+    assertEquals(9, repository.getQuantityOnHand(ISBN));
+    assertEquals(18.00, repository.getAccountBalance(USER1), 0.00);
+  }
+
 
 }
