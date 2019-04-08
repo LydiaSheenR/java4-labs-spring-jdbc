@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="3" author="jeff">
+
+        <createTable tableName="book">
+            <column name="isbn" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="book_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="currency" />
+        </createTable>
+
+        <createTable tableName="book_stock">
+            <column name="isbn" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="quantity" type="int" defaultValue="0" />
+        </createTable>
+        <sql>
+            ALTER TABLE book_stock ADD CONSTRAINT positive_quantity CHECK (quantity >= 0)
+        </sql>
+
+        <createTable tableName="account">
+            <column name="username" type="varchar(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="balance" type="currency" defaultValue="0.00"/>
+        </createTable>
+        <sql>
+            ALTER TABLE account ADD CONSTRAINT positive_balance CHECK (balance >= 0)
+        </sql>
+
+    </changeSet>
+
+    <changeSet id="4" author="jeff" runAlways="true">
+
+        <sql>
+            truncate table account;
+        </sql>
+        <sql>
+            truncate table book_stock;
+        </sql>
+        <sql>
+            truncate table book;
+        </sql>
+
+        <insert tableName="book">
+            <column name="isbn" value="0001" />
+            <column name="book_name" value="The First Book"/>
+            <column name="price" value="7"/>
+        </insert>
+        <insert tableName="book_stock">
+            <column name="isbn" value="0001" />
+            <column name="quantity" value="10"/>
+        </insert>
+        <insert tableName="account">
+            <column name="username" value="user1" />
+            <column name="balance" value="25"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
