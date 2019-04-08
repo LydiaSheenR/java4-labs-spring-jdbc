@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-public class AnnotatedTransactionalBookShopTests {
+public class BookShopRepositoryTests {
 
   private final String ISBN = "0001";
   private final String USER1 = "user1";
