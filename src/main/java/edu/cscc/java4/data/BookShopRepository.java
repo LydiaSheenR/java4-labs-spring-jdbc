@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.util.Collection;
 
+
 public class BookShopRepository {
 
   private JdbcTemplate jdbcTemplate;
@@ -19,40 +20,63 @@ public class BookShopRepository {
   }
 
 
-  public void purchase (String isbn, int quantity, String username) {
+  public void setBookPrice (String isbn, double newPrice) {
+    String updateStatment = "UPDATE BOOK SET PRICE = ? WHERE ISBN = ?";
+    // TODO: Make me work
+  }
 
-    String bookPriceQuery = "SELECT PRICE FROM BOOK WHERE ISBN = ?";
-    String bookQtyUpdateStatement = "UPDATE BOOK_STOCK SET QUANTITY = QUANTITY - ? WHERE ISBN = ?";
-    String accountBalanceUpdateStatement = "UPDATE ACCOUNT SET BALANCE = BALANCE - ? WHERE USERNAME = ?";
+  public double getBookPrice (String isbn) {
+    String query = "SELECT PRICE FROM BOOK WHERE ISBN = ?";
+    // TODO: Make me work
+    return 0.00;
+  }
 
-    // TODO Implement Me
+
+  public void setQuantityOnHand (String isbn, int quantityOnHand) {
+    String updateStatment = "UPDATE BOOK_STOCK SET QUANTITY = ? WHERE ISBN = ?";
+    // TODO: Make me work
   }
 
   public int getQuantityOnHand(String isbn) {
-    String query = "select quantity from book_stock where isbn = ?";
-    // TODO Implement Me
+    String query = "SELECT QUANTITY FROM BOOK_STOCK WHERE ISBN = ?";
+    // TODO: Make me work
     return 0;
   }
 
+  public void setAccountBalance (String username, double newBalance) {
+    String updateStatment = "UPDATE ACCOUNT SET BALANCE = ? WHERE USERNAME = ?";
+    // TODO: Make me work
+  }
+
   public double getAccountBalance(String username) {
-    String query = "select balance from account where USERNAME = ?";
-    // TODO Implement Me
+    String query = "SELECT BALANCE FROM ACCOUNT WHERE USERNAME = ?";
+    // TODO: Make me work
     return 0.00;
   }
 
 
   public Collection<Book> getAllBooks () {
 
-    String query = "select isbn, book_name, price from book";
-    // TODO Implement Me
+    String query = "SELECT ISBN, BOOK_NAME, PRICE FROM BOOK";
+    // TODO: Make me work
     return null;
   }
 
 
   public Book getBookByIsbn (String isbn) {
-    String query = "select isbn, book_name, price from book where isbn = ?";
-    // TODO Implement Me
+    String query = "SELECT ISBN, BOOK_NAME, PRICE FROM BOOK WHERE ISBN = ?";
+    // TODO: Make me work
     return null;
+  }
+
+  @Transactional
+  public void purchase (String isbn, int quantity, String username) {
+
+    String bookPriceQuery = "SELECT PRICE FROM BOOK WHERE ISBN = ?";
+    String bookQtyUpdateStatement = "UPDATE BOOK_STOCK SET QUANTITY = QUANTITY - ? WHERE ISBN = ?";
+    String accountBalanceUpdateStatement = "UPDATE ACCOUNT SET BALANCE = BALANCE - ? WHERE USERNAME = ?";
+
+    // TODO: Make me work
   }
 
 }
